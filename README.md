@@ -1,4 +1,1 @@
-contacts-api
-============
-
-Draft of the DAP WG Pick Contacts Intent specification
+Everything is in the gh-pages branch.
