@@ -1,0 +1,968 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>
+<html lang="en" dir="ltr">
+<head>
+    <title>Pick Contacts Intent</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    
+    
+  <style type="text/css">/*****************************************************************
+ * ReSpec 3 CSS
+ * Robin Berjon - http://berjon.com/
+ *****************************************************************/
+
+/* --- INLINES --- */
+em.rfc2119 { 
+    text-transform:     lowercase;
+    font-variant:       small-caps;
+    font-style:         normal;
+    color:              #900;
+}
+
+h1 acronym, h2 acronym, h3 acronym, h4 acronym, h5 acronym, h6 acronym, a acronym,
+h1 abbr, h2 abbr, h3 abbr, h4 abbr, h5 abbr, h6 abbr, a abbr {
+    border: none;
+}
+
+dfn {
+    font-weight:    bold;
+}
+
+a.internalDFN {
+    color:  inherit;
+    border-bottom:  1px solid #99c;
+    text-decoration:    none;
+}
+
+a.externalDFN {
+    color:  inherit;
+    border-bottom:  1px dotted #ccc;
+    text-decoration:    none;
+}
+
+a.bibref {
+    text-decoration:    none;
+}
+
+cite .bibref {
+    font-style: normal;
+}
+
+code {
+    color:  #ff4500;
+}
+
+
+/* --- --- */
+ol.algorithm { counter-reset:numsection; list-style-type: none; }
+ol.algorithm li { margin: 0.5em 0; }
+ol.algorithm li:before { font-weight: bold; counter-increment: numsection; content: counters(numsection, ".") ") "; }
+
+/* --- TOC --- */
+.toc a, .tof a {
+    text-decoration:    none;
+}
+
+a .secno, a .figno {
+    color:  #000;
+}
+
+ul.tof, ol.tof {
+    list-style: none outside none;
+}
+
+.caption {
+    margin-top: 0.5em;
+    font-style:   italic;
+}
+
+/* --- TABLE --- */
+table.simple {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    border-bottom:  3px solid #005a9c;
+}
+
+.simple th {
+    background: #005a9c;
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+}
+
+.simple th[scope="row"] {
+    background: inherit;
+    color:  inherit;
+    border-top: 1px solid #ddd;
+}
+
+.simple td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+}
+
+.simple tr:nth-child(even) {
+    background: #f0f6ff;
+}
+
+/* --- DL --- */
+.section dd > p:first-child {
+    margin-top: 0;
+}
+
+.section dd > p:last-child {
+    margin-bottom: 0;
+}
+
+.section dd {
+    margin-bottom:  1em;
+}
+
+.section dl.attrs dd, .section dl.eldef dd {
+    margin-bottom:  0;
+}
+</style><style type="text/css">/* --- EXAMPLES --- */
+div.example-title {
+    min-width: 7.5em;
+    color: #b9ab2d;
+}
+div.example-title span {
+    text-transform: uppercase;   
+}
+div.example, div.illegal-example {
+    padding: 0.5em;
+    margin: 1em 0;
+    position: relative;
+    clear: both;
+}
+div.illegal-example { color: red }
+div.illegal-example p { color: black }
+div.example {
+    padding: .5em;
+    border-left-width: .5em;
+    border-left-style: solid;
+    border-color: #e0cb52;
+    background: #fcfaee;    
+}
+</style><style type="text/css">/* --- ISSUES/NOTES --- */
+div.issue-title, div.note-title {
+    padding-right:  1em;
+    min-width: 7.5em;
+    color: #b9ab2d;
+}
+div.issue-title { color: #e05252; }
+div.note-title { color: #52e052; }
+div.issue-title span, div.note-title span {
+    text-transform: uppercase;
+}
+div.note, div.issue {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.note > p:first-child, .issue > p:first-child { margin-top: 0 }
+.issue, .note {
+    padding: .5em;
+    border-left-width: .5em;
+    border-left-style: solid;
+}
+div.issue, div.note {
+    padding: 0.5em;
+    margin: 1em 0;
+    position: relative;
+    clear: both;
+}
+span.note, span.issue { padding: .1em .5em .15em; }
+
+.issue {
+    border-color: #e05252;
+    background: #fbe9e9;
+}
+.note {
+    border-color: #52e052;
+    background: #e9fbe9;
+}
+
+
+</style><style type="text/css">/* HIGHLIGHTS */
+code.prettyprint {
+    color:  inherit;
+}
+
+/* this from google-code-prettify */
+.pln{color:#000}@media screen{.str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun,.opn,.clo{color:#660}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec,.var{color:#606}.fun{color:red}}@media print,projection{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun,.opn,.clo{color:#440}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style-type:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}
+</style><style type="text/css">/* --- WEB IDL --- */
+pre.idl {
+    border-top: 1px solid #90b8de;
+    border-bottom: 1px solid #90b8de;
+    padding:    1em;
+    line-height:    120%;
+}
+
+pre.idl::before {
+    content:    "WebIDL";
+    display:    block;
+    width:      150px;
+    background: #90b8de;
+    color:  #fff;
+    font-family:    initial;
+    padding:    3px;
+    font-weight:    bold;
+    margin: -1em 0 1em -1em;
+}
+
+.idlType {
+    color:  #ff4500;
+    font-weight:    bold;
+    text-decoration:    none;
+}
+
+/*.idlModule*/
+/*.idlModuleID*/
+/*.idlInterface*/
+.idlInterfaceID, .idlDictionaryID, .idlCallbackID, .idlEnumID {
+    font-weight:    bold;
+    color:  #005a9c;
+}
+
+.idlSuperclass {
+    font-style: italic;
+    color:  #005a9c;
+}
+
+/*.idlAttribute*/
+.idlAttrType, .idlFieldType, .idlMemberType {
+    color:  #005a9c;
+}
+.idlAttrName, .idlFieldName, .idlMemberName {
+    color:  #ff4500;
+}
+.idlAttrName a, .idlFieldName a, .idlMemberName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlMethod*/
+.idlMethType, .idlCallbackType {
+    color:  #005a9c;
+}
+.idlMethName {
+    color:  #ff4500;
+}
+.idlMethName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlParam*/
+.idlParamType {
+    color:  #005a9c;
+}
+.idlParamName {
+    font-style: italic;
+}
+
+.extAttr {
+    color:  #666;
+}
+
+/*.idlConst*/
+.idlConstType {
+    color:  #005a9c;
+}
+.idlConstName {
+    color:  #ff4500;
+}
+.idlConstName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlException*/
+.idlExceptionID {
+    font-weight:    bold;
+    color:  #c00;
+}
+
+.idlTypedefID, .idlTypedefType {
+    color:  #005a9c;
+}
+
+.idlRaises, .idlRaises a.idlType, .idlRaises a.idlType code, .excName a, .excName a code {
+    color:  #c00;
+    font-weight:    normal;
+}
+
+.excName a {
+    font-family:    monospace;
+}
+
+.idlRaises a.idlType, .excName a.idlType {
+    border-bottom:  1px dotted #c00;
+}
+
+.excGetSetTrue, .excGetSetFalse, .prmNullTrue, .prmNullFalse, .prmOptTrue, .prmOptFalse {
+    width:  45px;
+    text-align: center;
+}
+.excGetSetTrue, .prmNullTrue, .prmOptTrue { color:  #0c0; }
+.excGetSetFalse, .prmNullFalse, .prmOptFalse { color:  #c00; }
+
+.idlImplements a {
+    font-weight:    bold;
+}
+
+dl.attributes, dl.methods, dl.constants, dl.fields, dl.dictionary-members {
+    margin-left:    2em;
+}
+
+.attributes dt, .methods dt, .constants dt, .fields dt, .dictionary-members dt {
+    font-weight:    normal;
+}
+
+.attributes dt code, .methods dt code, .constants dt code, .fields dt code, .dictionary-members dt code {
+    font-weight:    bold;
+    color:  #000;
+    font-family:    monospace;
+}
+
+.attributes dt code, .fields dt code, .dictionary-members dt code {
+    background:  #ffffd2;
+}
+
+.attributes dt .idlAttrType code, .fields dt .idlFieldType code, .dictionary-members dt .idlMemberType code {
+    color:  #005a9c;
+    background:  transparent;
+    font-family:    inherit;
+    font-weight:    normal;
+    font-style: italic;
+}
+
+.methods dt code {
+    background:  #d9e6f8;
+}
+
+.constants dt code {
+    background:  #ddffd2;
+}
+
+.attributes dd, .methods dd, .constants dd, .fields dd, .dictionary-members dd {
+    margin-bottom:  1em;
+}
+
+table.parameters, table.exceptions {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    margin: 0.5em 0;
+    width:  100%;
+}
+table.parameters { border-bottom:  1px solid #90b8de; }
+table.exceptions { border-bottom:  1px solid #deb890; }
+
+.parameters th, .exceptions th {
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+    font-family:    initial;
+    font-weight:    normal;
+    text-shadow:    #666 1px 1px 0;
+}
+.parameters th { background: #90b8de; }
+.exceptions th { background: #deb890; }
+
+.parameters td, .exceptions td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.parameters tr:first-child td, .exceptions tr:first-child td {
+    border-top: none;
+}
+
+.parameters td.prmName, .exceptions td.excName, .exceptions td.excCodeName {
+    width:  100px;
+}
+
+.parameters td.prmType {
+    width:  120px;
+}
+
+table.exceptions table {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    width:  100%;
+}
+</style><link href="http://www.w3.org/StyleSheets/TR/W3C-WD" rel="stylesheet"></head>
+  <body><div class="head">
+  <p>
+    
+      <a href="http://www.w3.org/"><img src="http://www.w3.org/Icons/w3c_home" alt="W3C" height="48" width="72"></a>
+    
+  </p>
+  <h1 class="title" id="title">Pick Contacts Intent</h1>
+  
+  <h2 id="w3c-working-draft-12-july-2012"><abbr title="World Wide Web Consortium">W3C</abbr> Working Draft 12 July 2012</h2>
+  <dl>
+    
+      <dt>This version:</dt>
+      <dd><a href="http://www.w3.org/TR/2012/WD-contacts-api-20120712/">http://www.w3.org/TR/2012/WD-contacts-api-20120712/</a></dd>
+      <dt>Latest published version:</dt>
+      <dd><a href="http://www.w3.org/TR/contacts-api/">http://www.w3.org/TR/contacts-api/</a></dd>
+    
+    
+      <dt>Latest editor's draft:</dt>
+      <dd><a href="http://w3c-test.org/2009/dap/contacts/">http://w3c-test.org/2009/dap/contacts/</a></dd>
+    
+    
+    
+    
+    
+      <dt>Previous version:</dt>
+      <dd><a href="http://www.w3.org/TR/2011/WD-contacts-api-20110616/">http://www.w3.org/TR/2011/WD-contacts-api-20110616/</a></dd>
+    
+    
+    <dt>Editors:</dt>
+    <dd><a href="http://richt.me">Richard Tibbett</a>, <a href="http://www.opera.com">Opera Software ASA</a></dd>
+<dd><a href="http://berjon.com/">Robin Berjon</a>, <a href="http://robineko.com/">Robineko</a></dd>
+
+    
+  </dl>
+  
+  
+  
+  
+    
+      <p class="copyright">
+        <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 
+        2012
+        
+        <a href="http://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>®</sup> 
+        (<a href="http://www.csail.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>,
+        <a href="http://www.ercim.eu/"><abbr title="European Research Consortium for Informatics and Mathematics">ERCIM</abbr></a>,
+        <a href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved.
+        <abbr title="World Wide Web Consortium">W3C</abbr> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
+        <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and
+        <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.
+      </p>
+    
+  
+  <hr>
+</div>
+    <div class="introductory section" id="abstract"><h2>Abstract</h2>
+      <p>
+        The Pick Contacts Intent defines a Web Intent [<cite><a href="#bib-WEBINTENTS" class="bibref">WEBINTENTS</a></cite>] that enables access to a user's
+        address book service from inside a Web application. It defines both an Intent action/type
+        pair that selects this operation, and the format of the contacts data that is returned
+        by services implementing this specification
+      </p>
+    </div><div id="sotd" class="introductory section"><h2>Status of This Document</h2>
+  
+    
+      
+        <p>
+          <em>This section describes the status of this document at the time of its publication. Other
+          documents may supersede this document. A list of current <abbr title="World Wide Web Consortium">W3C</abbr> publications and the latest revision
+          of this technical report can be found in the <a href="http://www.w3.org/TR/"><abbr title="World Wide Web Consortium">W3C</abbr> technical reports
+          index</a> at http://www.w3.org/TR/.</em>
+        </p>
+        
+      <p>
+        This document builds atop previous versions that were pure JavaScript APIs and turns them
+        into an API built using Web Intents, while maintaining the data format which the JavaScript
+        APIs had defined.
+      </p>
+    
+        <p>
+          This document was published by the <a href="http://www.w3.org/2009/dap/">Device APIs Working Group</a> as a Working Draft.
+          
+            This document is intended to become a <abbr title="World Wide Web Consortium">W3C</abbr> Recommendation.
+          
+          If you wish to make comments regarding this document, please send them to 
+          <a href="mailto:public-device-apis@w3.org">public-device-apis@w3.org</a> 
+          (<a href="mailto:public-device-apis-request@w3.org?subject=subscribe">subscribe</a>,
+          <a href="http://lists.w3.org/Archives/Public/public-device-apis/">archives</a>).
+          
+          
+          All feedback is welcome.
+        </p>
+        
+          <p>
+            Publication as a Working Draft does not imply endorsement by the <abbr title="World Wide Web Consortium">W3C</abbr> Membership.
+            This is a draft document and may be updated, replaced or obsoleted by other documents at 
+            any time. It is inappropriate to cite this document as other than work in progress.
+          </p>
+        
+        
+        <p>
+          
+            This document was produced by a group operating under the 
+            <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>.
+          
+          
+          
+            
+              <abbr title="World Wide Web Consortium">W3C</abbr> maintains a <a href="http://www.w3.org/2004/01/pp-impl/43696/status" rel="disclosure">public list of any patent disclosures</a> 
+            
+            made in connection with the deliverables of the group; that page also includes instructions for 
+            disclosing a patent. An individual who has actual knowledge of a patent which the individual believes contains
+            <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential Claim(s)</a> must disclose the
+            information in accordance with <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section
+            6 of the <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>.
+          
+          
+        </p>
+        
+      
+    
+  
+</div><div class="section" id="toc"><h2 class="introductory">Table of Contents</h2><ul class="toc"><li class="tocline"><a class="tocxref" href="#introduction"><span class="secno">1. </span>Introduction</a></li><li class="tocline"><a class="tocxref" href="#conformance"><span class="secno">2. </span>Conformance</a></li><li class="tocline"><a class="tocxref" href="#security-and-privacy-considerations"><span class="secno">3. </span>Security and Privacy Considerations</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#privacy-considerations-for-implementers-of-the-pick-contacts-intent"><span class="secno">3.1 </span>Privacy considerations for implementers of the Pick Contacts Intent</a></li><li class="tocline"><a class="tocxref" href="#privacy-considerations-for-recipients-of-contact-information"><span class="secno">3.2 </span>Privacy considerations for recipients of contact information</a></li><li class="tocline"><a class="tocxref" href="#additional-implementation-considerations"><span class="secno">3.3 </span>Additional implementation considerations</a></li></ul></li><li class="tocline"><a class="tocxref" href="#intent-description"><span class="secno">4. </span>Intent Description</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#intent-extras"><span class="secno">4.1 </span>Intent Extras</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#the-contactintentextras-dictionary"><span class="secno">4.1.1 </span>The <a class="idlType" href="#idl-def-ContactIntentExtras"><code>ContactIntentExtras</code></a> dictionary</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#dictionary-contactintentextras-members"><span class="secno">4.1.1.1 </span>Dictionary <a href="#idl-def-ContactIntentExtras" class="idlType"><code>ContactIntentExtras</code></a> Members</a></li></ul></li></ul></li></ul></li><li class="tocline"><a class="tocxref" href="#data-format"><span class="secno">5. </span>Data Format</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#the-contact-dictionary"><span class="secno">5.1 </span>The <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> dictionary</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#dictionary-contact-members"><span class="secno">5.1.1 </span>Dictionary <a href="#idl-def-Contact" class="idlType"><code>Contact</code></a> Members</a></li></ul></li><li class="tocline"><a class="tocxref" href="#the-contactname-dictionary"><span class="secno">5.2 </span>The <a class="idlType" href="#idl-def-ContactName"><code>ContactName</code></a> dictionary</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#dictionary-contactname-members"><span class="secno">5.2.1 </span>Dictionary <a href="#idl-def-ContactName" class="idlType"><code>ContactName</code></a> Members</a></li></ul></li><li class="tocline"><a class="tocxref" href="#the-contactfield-dictionary"><span class="secno">5.3 </span>The <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> dictionary</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#dictionary-contactfield-members"><span class="secno">5.3.1 </span>Dictionary <a href="#idl-def-ContactField" class="idlType"><code>ContactField</code></a> Members</a></li></ul></li><li class="tocline"><a class="tocxref" href="#the-contactaddress-dictionary"><span class="secno">5.4 </span>The <a class="idlType" href="#idl-def-ContactAddress"><code>ContactAddress</code></a> dictionary</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#dictionary-contactaddress-members"><span class="secno">5.4.1 </span>Dictionary <a href="#idl-def-ContactAddress" class="idlType"><code>ContactAddress</code></a> Members</a></li></ul></li><li class="tocline"><a class="tocxref" href="#the-contactorganization-dictionary"><span class="secno">5.5 </span>The <a class="idlType" href="#idl-def-ContactOrganization"><code>ContactOrganization</code></a> dictionary</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#dictionary-contactorganization-members"><span class="secno">5.5.1 </span>Dictionary <a href="#idl-def-ContactOrganization" class="idlType"><code>ContactOrganization</code></a> Members</a></li></ul></li><li class="tocline"><a class="tocxref" href="#the-contacterror-dictionary"><span class="secno">5.6 </span>The <a class="idlType" href="#idl-def-ContactError"><code>ContactError</code></a> dictionary</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#dictionary-contacterror-members"><span class="secno">5.6.1 </span>Dictionary <a href="#idl-def-ContactError" class="idlType"><code>ContactError</code></a> Members</a></li></ul></li><li class="tocline"><a class="tocxref" href="#extended-contact-properties-and-parameters"><span class="secno">5.7 </span>Extended Contact Properties and Parameters</a></li></ul></li><li class="tocline"><a class="tocxref" href="#references"><span class="secno">A. </span>References</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#normative-references"><span class="secno">A.1 </span>Normative references</a></li><li class="tocline"><a class="tocxref" href="#informative-references"><span class="secno">A.2 </span>Informative references</a></li></ul></li></ul></div>
+
+    
+
+    <div id="introduction" class="informative section">
+      <!--OddPage--><h2><span class="secno">1. </span>Introduction</h2><p><em>This section is non-normative.</em></p>
+      <p>
+        Every operating system and a large number of Web-based service providers have different ways of
+        representing address book information. Most users are required to maintain a plurality of contact lists
+        which leads to multiple copies of address book data. This in turn often leads to disjoint and inconsistent
+        information being stored across a user's address book providers.
+      </p>
+      <p>
+        When sharing contact data with third parties users are, more often than not, required to hand over access to
+        their whole address book. Users are implicitly required to trust third parties with all of their data
+        when, in reality, the user may only wish, or need, to share a subset of their address book information so
+        that an application can fulfil its purpose. When sharing of only a subset of a user's address book is
+        possible, it often requires the user to type the information into a form herself rather than having it
+        extracted from one of her address book services.
+      </p>
+      <p>
+        This specification enables a Web application to have access to a selected subset of a user's address book,
+        obtained from arbitrary services not known to the Web application. The interactions, brokered using
+        Web Intents [<cite><a href="#bib-WEBINTENTS" class="bibref">WEBINTENTS</a></cite>] are designed in order to maximise the user's security and privacy.
+        Address book data may be sourced from a plurality of sources — both online and local to the user's device
+        — so long as those sources are registered as Intent services with the user agent. It defines a common
+        format which services use to provide data to Web applications in a consistent and interoperable manner.
+      </p>
+      <p>
+        The expectation is that data sharing happens with explicit user permission and filtering. The focus of 
+        this data sharing is on making the user aware of the data that they will share and putting them at the 
+        centre of the data sharing process; free to select both the extent to which they share their address 
+        book information and the ability to restrict which pieces of information related to which contact gets shared.
+      </p>
+      <p>
+        A set of <a href="#security-and-privacy-considerations">Security and Privacy Considerations</a> are
+        presented for the discretion of both implementers of Pick Contacts Intent services and recipients of contact
+        information (i.e. Web applications).
+      </p>
+      <p>
+        The following code illustrates how to obtain contact information from a user's address book:
+      </p>
+      <div class="example"><div class="example-title"><span>Example 1</span></div><pre class="example highlight prettyprint"><span class="kwd">var</span><span class="pln"> intent </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Intent</span><span class="pun">({</span><span class="pln"> action</span><span class="pun">:</span><span class="pln">   </span><span class="str">"http://webintents.org/pick"</span><span class="pun">,</span><span class="pln">
+                          type</span><span class="pun">:</span><span class="pln">     </span><span class="str">"http://w3.org/type/contact"</span><span class="pun">,</span><span class="pln">
+                          extras</span><span class="pun">:</span><span class="pln">   </span><span class="pun">{</span><span class="pln"> fields</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">"displayName"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"emails"</span><span class="pun">]</span><span class="pln"> </span><span class="pun">}});</span><span class="pln">
+navigator</span><span class="pun">.</span><span class="pln">startActivity</span><span class="pun">(</span><span class="pln">intent</span><span class="pun">,</span><span class="pln"> contactsOK</span><span class="pun">,</span><span class="pln"> contactsFail</span><span class="pun">);</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> contactsOK </span><span class="pun">(</span><span class="pln">contacts</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// iterate over the array of contacts to do something useful with them</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="kwd">function</span><span class="pln"> contactsFail </span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// display an error to the user</span><span class="pln">
+</span><span class="pun">}</span></pre></div>
+      <p>
+        When the above code is run, the user would typically be prompted by her user agent to select
+        a service able to pick a contact (there may be several such services, if she has multiple address
+        book sources). Upon selecting a service, she will be presented with an interface enabling her
+        to choose what contact information is returned to the Web application. Upon completing her
+        choice, the contacts data would be returned to the Web application in the <code>contactsOK</code>
+        callback.
+      </p>
+    </div>
+
+    <div class="section" id="conformance"><!--OddPage--><h2><span class="secno">2. </span>Conformance</h2>
+<p>
+  As well as sections marked as non-normative, all authoring guidelines, diagrams, examples,
+  and notes in this specification are non-normative. Everything else in this specification is
+  normative.
+</p>
+<p>
+  The key words <em title="must" class="rfc2119">must</em>, <em title="must not" class="rfc2119">must not</em>, <em title="required" class="rfc2119">required</em>, <em title="should" class="rfc2119">should</em>, <em title="should not" class="rfc2119">should not</em>, <em title="recommended" class="rfc2119">recommended</em>, <em title="may" class="rfc2119">may</em>,
+  and <em title="optional" class="rfc2119">optional</em> in this specification are to be interpreted as described in [<cite><a href="#bib-RFC2119" class="bibref">RFC2119</a></cite>].
+</p>
+
+      <p>
+        There is only one single conformance requirement placed upon the <dfn id="dfn-user-agent">user agent</dfn>
+        product: a <a class="internalDFN" href="#dfn-user-agent">user agent</a> <em title="must" class="rfc2119">must</em> support Web Intents [<cite><a href="#bib-WEBINTENTS" class="bibref">WEBINTENTS</a></cite>].
+      </p>
+      <p>
+        The conformance criteria in this specification apply to a single product: the
+        <dfn id="dfn-contact-service">contact service</dfn> which exposes a Web Intent service that
+        handles Pick Contact Intents as defined in this specification.
+      </p>
+      <p>
+        The data returned by the <a class="internalDFN" href="#dfn-contact-service">contact service</a> is described in this specification using [<cite><a href="#bib-WEBIDL" class="bibref">WEBIDL</a></cite>].
+        When this data is provided using JavaScript, then the <a class="internalDFN" href="#dfn-contact-service">contact service</a> <em title="must" class="rfc2119">must</em> do so in a manner
+        consistent with the ECMAScript Bindings defined in the Web IDL specification.
+      </p>
+    </div>
+
+    <div id="security-and-privacy-considerations" class="informative section">
+      <!--OddPage--><h2><span class="secno">3. </span>Security and Privacy Considerations</h2><p><em>This section is non-normative.</em></p>
+      <p>
+        The Intent defined in this specification can be used to find contact information from a user's address
+        books. This discloses information related to a user's contacts such as their phone numbers, email
+        addresses and other personally identifying information. The distribution of this information could
+        potentially compromise the user's privacy, or the user's contacts' privacy. A conforming implementation
+        of this specification should provide a mechanism that protects the user's privacy and this mechanism should
+        ensure that no contact information is retrievable without the user's express permission.
+      </p>
+      <div class="section" id="privacy-considerations-for-implementers-of-the-pick-contacts-intent">
+        <h3><span class="secno">3.1 </span>Privacy considerations for implementers of the Pick Contacts Intent</h3><p><em>This section is non-normative.</em></p>
+        <p>
+          A <a class="internalDFN" href="#dfn-contact-service">contact service</a> should not provide contact information to Web sites without the express
+          permission of the user. Obtaining the user's express permission to access a set of contacts does 
+          not imply that the user has granted permission for the same Web site to access more contact information.
+          A <a class="internalDFN" href="#dfn-contact-service">contact service</a> should take great care to ensure that the user can clearly see which information
+          is about to be shared, and must not share more information than has been requested by the Web application.
+        </p>
+        <p>
+          A <a class="internalDFN" href="#dfn-user-agent">user agent</a> may have prearranged trust relationships with a specific <a class="internalDFN" href="#dfn-contact-service">contact service</a> 
+          that do not require such user interaction.
+        </p>
+      </div>
+      <div class="section" id="privacy-considerations-for-recipients-of-contact-information">
+        <h3><span class="secno">3.2 </span>Privacy considerations for recipients of contact information</h3>
+        <p>
+          Web sites operators that retrieve contacts information using this Intent are denoted as recipients
+          below.
+        </p>
+        <p>
+          Recipients should only request contact information when necessary, and only use the contact
+          information for the task for which it was provided to them.
+        </p>
+        <p>
+          Recipients should dispose of contact information once that task is completed, unless expressly
+          permitted to retain it by the user. Recipients should also take measures to protect this information
+          against unauthorised access. If contact information is stored, users should be allowed to update and
+          delete this information.
+        </p>
+        <p>
+          The recipient of contact information should not retransmit the contact information without the
+          user's express permission. Care should be taken when retransmitting and use of encryption is
+          encouraged.
+        </p>
+        <p>
+          Recipients should clearly and conspicuously disclose the fact that they are collecting contact data,
+          the purpose of the collection, how long the data is retained, how the data is secured, how the data is
+          shared if it is shared, how users can access, update and delete the data, and any other choices that
+          users have with respect to the data. This disclosure should include an explanation of any exceptions to
+          the guidelines listed above.
+        </p>
+        <p>
+          Note that even if a user gives permission to share their contact information this can have serious
+          privacy implications for those parties whose contacts are shared, as they may not wish such sharing to
+          occur. This should be considered by Web applications when requesting and using such information.
+        </p>
+      </div>
+      <div class="section" id="additional-implementation-considerations">
+        <h3><span class="secno">3.3 </span>Additional implementation considerations</h3>
+        <p>
+          Further to the requirements listed in the previous section, implementers of a <a>user agents</a> are
+          also advised to consider the following aspects that can negatively affect the privacy of their users:
+          in certain cases, users can inadvertently grant permission to disclose their contacts
+          to Web sites. In other cases, the content hosted at a certain URL changes in such a way that the
+          previously granted contact permissions no longer apply as far as the user is concerned. Or the users
+          might simply change their minds.
+        </p>
+        <p>
+          Predicting or preventing these situations is inherently difficult. Mitigation and in-depth defensive
+          measures are a <a class="internalDFN" href="#dfn-user-agent">user agent</a>'s responsibility and not prescribed by this specification. However, in
+          designing these measures, implementers are advised to enable user awareness of information sharing, and to
+          provide easy access to user interfaces that enable revocation of permissions that Web applications have to
+          access this Intent.
+        </p>
+      </div>
+    </div>
+
+    <div class="section" id="intent-description">
+      <!--OddPage--><h2><span class="secno">4. </span>Intent Description</h2>
+      <p>
+        The action for this Intent is <code>http://webintents.org/pick</code>.
+      </p>
+      <p>
+        The type for this Intent is <code>http://w3.org/type/contact</code>.
+      </p>
+      <p>
+        When a <a class="internalDFN" href="#dfn-contact-service">contact service</a> is matched for delivery using these action and type, it
+        <em title="must" class="rfc2119">must</em> respond in one of two ways:
+      </p>
+      <ul>
+        <li>
+          If contacts have been successfully selected for delivery, then a successful payload is returned
+          to the client (using <code>postResult()</code>) matching the data format defined below.
+        </li>
+        <li>
+          If an error of any kind takes place in the service, then an error payload is returned (using
+          <code>postFailure()</code>) matching the error data format defined below. The <a class="internalDFN" href="#dfn-contact-service">contact service</a>
+          <em title="must not" class="rfc2119">must not</em> treat the user selecting zero contacts or cancelling the service as error conditions.
+        </li>
+      </ul>
+      <div class="section" id="intent-extras">
+        <h3><span class="secno">4.1 </span>Intent Extras</h3>
+        <p>
+          The Pick Contact Intent can be instantiated with an <code>extras</code> field that adheres to the 
+          following dictionary.
+        </p>
+        <div class="section" id="the-contactintentextras-dictionary">
+          <h4><span class="secno">4.1.1 </span>The <a class="idlType" href="#idl-def-ContactIntentExtras"><code>ContactIntentExtras</code></a> dictionary</h4>
+          <p>
+            The <a class="idlType" href="#idl-def-ContactIntentExtras"><code>ContactIntentExtras</code></a> dictionary describes the options that can be applied to contact searching.
+          </p>
+          <pre class="idl"><span class="idlDictionary" id="idl-def-ContactIntentExtras">dictionary <span class="idlDictionaryID">ContactIntentExtras</span> {
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span>     <span class="idlMemberName"><a href="#widl-ContactIntentExtras-search">search</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>unsigned long</a>?</span> <span class="idlMemberName"><a href="#widl-ContactIntentExtras-limit">limit</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>[]</span>    <span class="idlMemberName"><a href="#widl-ContactIntentExtras-fields">fields</a></span>;</span>
+};</span></pre><div class="section" id="dictionary-contactintentextras-members"><h5><span class="secno">4.1.1.1 </span>Dictionary <a href="#idl-def-ContactIntentExtras" class="idlType"><code>ContactIntentExtras</code></a> Members</h5><dl class="dictionary-members"><dt id="widl-ContactIntentExtras-fields"><code>fields</code> of type array of <span class="idlMemberType"><a>DOMString</a></span></dt><dd>
+              An array of field names corresponding to the name of the fields in the <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> dictionary that
+              the Web application is requesting from the <a class="internalDFN" href="#dfn-contact-service">contact service</a>. The <a class="internalDFN" href="#dfn-contact-service">contact service</a> <em title="must
+              not" class="rfc2119">must
+              not</em> return defined fields on the contact objects that it provides other than those present in this
+              list. If a field name is provided that the <a class="internalDFN" href="#dfn-contact-service">contact service</a> does not recognise as a field
+              of the <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> dictionary, then it <em title="must" class="rfc2119">must</em> ignore it.
+            </dd><dt id="widl-ContactIntentExtras-limit"><code>limit</code> of type <span class="idlMemberType"><a>unsigned long</a></span>, nullable</dt><dd>
+              By default a <a class="internalDFN" href="#dfn-contact-service">contact service</a> <em title="may" class="rfc2119">may</em> return as many contacts as the user selects. If <code>limit</code>
+              is specified, the <a class="internalDFN" href="#dfn-contact-service">contact service</a> <em title="must not" class="rfc2119">must not</em> return more than <code>limit</code> contacts. The
+              <a class="internalDFN" href="#dfn-contact-service">contact service</a> <em title="should" class="rfc2119">should</em> enforce this limitation in the user interface that it exposes.
+            </dd><dt id="widl-ContactIntentExtras-search"><code>search</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+              A string which provides a hint to the <a class="internalDFN" href="#dfn-contact-service">contact service</a> to facilitate contacts selection by the user.
+              The exact manner in which this hint is exploited is entirely up to the <a class="internalDFN" href="#dfn-contact-service">contact service</a>.
+            </dd></dl></div>
+        </div>
+      </div>
+    </div>
+    <div class="section" id="data-format">
+      <!--OddPage--><h2><span class="secno">5. </span>Data Format</h2>
+      <p>
+        Upon successful invocation, the <a class="internalDFN" href="#dfn-contact-service">contact service</a> <em title="must" class="rfc2119">must</em> return an array of <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> dictionaries.
+      </p>
+      <div class="section" id="the-contact-dictionary">
+        <h3><span class="secno">5.1 </span>The <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> dictionary</h3>
+        <p>
+          The <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> dictionary captures the properties of a contact object. All properties included in this 
+          interface have a corresponding definition in [<cite><a href="#bib-POCO-SCHEMA" class="bibref">POCO-SCHEMA</a></cite>], [<cite><a href="#bib-RFC2426" class="bibref">RFC2426</a></cite>] (also known as vCard), and 
+          [<cite><a href="#bib-OMA-CAB" class="bibref">OMA-CAB</a></cite>], thereby allowing the data format to be supported across implementations supporting these 
+          various contact representations.
+        </p>
+        <p>
+          Additional attributes <em title="may" class="rfc2119">may</em> be included according to the provisions detailed in 
+          <a href="#extended-contact-properties-and-parameters">Extended Contact Properties and Parameters</a>.
+        </p>
+        <pre class="idl"><span class="idlDictionary" id="idl-def-Contact">dictionary <span class="idlDictionaryID">Contact</span> {
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a></span>              <span class="idlMemberName"><a href="#widl-Contact-id">id</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span>             <span class="idlMemberName"><a href="#widl-Contact-displayName">displayName</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactName"><code>ContactName</code></a>?</span>           <span class="idlMemberName"><a href="#widl-Contact-name">name</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span>             <span class="idlMemberName"><a href="#widl-Contact-nickname">nickname</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a>[]?</span>        <span class="idlMemberName"><a href="#widl-Contact-phoneNumbers">phoneNumbers</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a>[]?</span>        <span class="idlMemberName"><a href="#widl-Contact-emails">emails</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactAddress"><code>ContactAddress</code></a>[]?</span>      <span class="idlMemberName"><a href="#widl-Contact-addresses">addresses</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a>[]?</span>        <span class="idlMemberName"><a href="#widl-Contact-ims">ims</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactOrganization"><code>ContactOrganization</code></a>[]?</span> <span class="idlMemberName"><a href="#widl-Contact-organizations">organizations</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>Date</a>?</span>                  <span class="idlMemberName"><a href="#widl-Contact-birthday">birthday</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span>             <span class="idlMemberName"><a href="#widl-Contact-note">note</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a>[]?</span>        <span class="idlMemberName"><a href="#widl-Contact-photos">photos</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>[]?</span>           <span class="idlMemberName"><a href="#widl-Contact-categories">categories</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a>[]?</span>        <span class="idlMemberName"><a href="#widl-Contact-urls">urls</a></span>;</span>
+};</span></pre><div class="section" id="dictionary-contact-members"><h4><span class="secno">5.1.1 </span>Dictionary <a href="#idl-def-Contact" class="idlType"><code>Contact</code></a> Members</h4><dl class="dictionary-members"><dt id="widl-Contact-addresses"><code>addresses</code> of type array of <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactAddress"><code>ContactAddress</code></a></span>, nullable</dt><dd>
+            This attribute represents one or more physical addresses associated with this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>.
+          </dd><dt id="widl-Contact-birthday"><code>birthday</code> of type <span class="idlMemberType"><a>Date</a></span>, nullable</dt><dd>
+            This attribute contains birthday of this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>. The <a class="internalDFN" href="#dfn-contact-service">contact service</a> <em title="may" class="rfc2119">may</em>
+            set the year value to 0000 when the age of the <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> is private or the year is not
+            available.
+          </dd><dt id="widl-Contact-categories"><code>categories</code> of type array of <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains one or more user-defined categories/tags/labels associated with this
+            <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>. e.g. "family", "favourite", "cryptozoologists".
+          </dd><dt id="widl-Contact-displayName"><code>displayName</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the name of this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> in a form that is suitable for display 
+            to the user.
+          </dd><dt id="widl-Contact-emails"><code>emails</code> of type array of <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a></span>, nullable</dt><dd>
+            This attribute represents one or more email addresses associated with this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>.
+          </dd><dt id="widl-Contact-id"><code>id</code> of type <span class="idlMemberType"><a>DOMString</a></span></dt><dd>
+            A globally unique identifier for the given <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> object. 
+          </dd><dt id="widl-Contact-ims"><code>ims</code> of type array of <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a></span>, nullable</dt><dd>
+            This attribute represents one or more instant messaging identifiers associated with this
+            <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>.
+          </dd><dt id="widl-Contact-name"><code>name</code> of type <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactName"><code>ContactName</code></a></span>, nullable</dt><dd>
+            This attribute represents the full name of this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> indicated by the name components 
+            associated with the <a class="idlType" href="#idl-def-ContactName"><code>ContactName</code></a> dictionary.
+          </dd><dt id="widl-Contact-nickname"><code>nickname</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the nickname (or a casual name) for this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>.
+          </dd><dt id="widl-Contact-note"><code>note</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the personal notes (free-text) for this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> that is managed by the
+            user of the address book.
+          </dd><dt id="widl-Contact-organizations"><code>organizations</code> of type array of <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactOrganization"><code>ContactOrganization</code></a></span>, nullable</dt><dd>
+            This attribute represents one or more organisations associated with this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>.
+          </dd><dt id="widl-Contact-phoneNumbers"><code>phoneNumbers</code> of type array of <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a></span>, nullable</dt><dd>
+            This attribute captures one or more phone numbers associated with this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>.
+          </dd><dt id="widl-Contact-photos"><code>photos</code> of type array of <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a></span>, nullable</dt><dd>
+            <p>
+              This attribute represents one or more photos associated with this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>.
+            </p>
+            <p>
+              The photos <em title="must" class="rfc2119">must</em> be specified in the <code>value</code> attribute of the <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> object 
+              by using a URL pointing to an image resource. The <code>data:</code> URI scheme may be used in order
+              to provide inline data.
+            </p>
+            <div class="note"><div class="note-title"><span>Note</span></div><p class="">
+              A <a class="internalDFN" href="#dfn-contact-service">contact service</a> <em title="should not" class="rfc2119">should not</em> use this attribute to send down arbitrary photos taken by this user,
+              but specifically profile photos of the contact suitable for display when describing the
+              contact.
+            </p></div>
+          </dd><dt id="widl-Contact-urls"><code>urls</code> of type array of <span class="idlMemberType"><a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a></span>, nullable</dt><dd>
+            <p>
+              This attribute represents one or more URLs associated with this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> e.g. personal web page, 
+              blog.
+            </p>
+          </dd></dl></div>
+      </div>
+
+      <div class="section" id="the-contactname-dictionary">
+        <h3><span class="secno">5.2 </span>The <a class="idlType" href="#idl-def-ContactName"><code>ContactName</code></a> dictionary</h3>
+        <p>
+          The <a class="idlType" href="#idl-def-ContactName"><code>ContactName</code></a> dictionary describes a contact's name in detail.
+        </p>
+        <pre class="idl"><span class="idlDictionary" id="idl-def-ContactName">dictionary <span class="idlDictionaryID">ContactName</span> {
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactName-familyName">familyName</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactName-givenName">givenName</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactName-middleName">middleName</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactName-honorificPrefix">honorificPrefix</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactName-honorificSuffix">honorificSuffix</a></span>;</span>
+};</span></pre><div class="section" id="dictionary-contactname-members"><h4><span class="secno">5.2.1 </span>Dictionary <a href="#idl-def-ContactName" class="idlType"><code>ContactName</code></a> Members</h4><dl class="dictionary-members"><dt id="widl-ContactName-familyName"><code>familyName</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the family name (also referred to as the last name) of this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>.
+          </dd><dt id="widl-ContactName-givenName"><code>givenName</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the given name (also referred to as the first name) of this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>.
+          </dd><dt id="widl-ContactName-honorificPrefix"><code>honorificPrefix</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the honorific prefix (or title) of this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>. E.g. Mr., Dr., Ms., Mrs.
+          </dd><dt id="widl-ContactName-honorificSuffix"><code>honorificSuffix</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the honorific suffix of this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>. E.g. Jr., III, Sr.
+          </dd><dt id="widl-ContactName-middleName"><code>middleName</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the middle name of this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a>.
+          </dd></dl></div>
+      </div>
+
+      <div class="section" id="the-contactfield-dictionary">
+        <h3><span class="secno">5.3 </span>The <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> dictionary</h3>
+        <p>
+          The <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> dictionary is a reusable component that is used to capture contact fields of the
+          <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> dictionary that have some modicum of structure.
+        </p>
+
+        <pre class="idl"><span class="idlDictionary" id="idl-def-ContactField">dictionary <span class="idlDictionaryID">ContactField</span> {
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a></span>  <span class="idlMemberName"><a href="#widl-ContactField-type">type</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactField-value">value</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>boolean</a></span>    <span class="idlMemberName"><a href="#widl-ContactField-pref">pref</a></span>;</span>
+};</span></pre><div class="section" id="dictionary-contactfield-members"><h4><span class="secno">5.3.1 </span>Dictionary <a href="#idl-def-ContactField" class="idlType"><code>ContactField</code></a> Members</h4><dl class="dictionary-members"><dt id="widl-ContactField-pref"><code>pref</code> of type <span class="idlMemberType"><a>boolean</a></span></dt><dd>
+            This attribute indicates whether this instance of the <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> is the
+            preferred, or primary, value for the contact property this <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> is
+            representing in the <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> interface. By default, the value is <code>false</code>.
+          </dd><dt id="widl-ContactField-type"><code>type</code> of type <span class="idlMemberType"><a>DOMString</a></span></dt><dd>
+            This attribute contains the type information for this <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> and its content varies subject
+            to the contact property this <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> is representing. For example, if the <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> 
+            is representing a <code>phoneNumber</code> property, the <code>type</code> attribute can be set to 
+            <code>home</code>, <code>mobile</code>; if the <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> is representing the <code>ims</code> 
+            property, the type attribute could be set to <code>xmpp</code>, <code>irc</code>, <code>bbm</code>, etc.
+          </dd><dt id="widl-ContactField-value"><code>value</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the value for this <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> and its content varies subject to the
+            contact property this <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> is representing. For example, if the <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> is 
+            representing an <code>email</code>, the value attribute could be set to <code>JoeSmith@example.com</code>, 
+            and if the <a class="idlType" href="#idl-def-ContactField"><code>ContactField</code></a> is representing a <code>url</code>, the value attribute can be set to    
+            <code>http://www.example.org/joesmith</code>, etc.
+          </dd></dl></div>
+      </div>
+
+      <div class="section" id="the-contactaddress-dictionary">
+        <h3><span class="secno">5.4 </span>The <a class="idlType" href="#idl-def-ContactAddress"><code>ContactAddress</code></a> dictionary</h3>
+        <p>
+          The <a class="idlType" href="#idl-def-ContactAddress"><code>ContactAddress</code></a> dictionary is a reusable component that is used to capture addresses
+          within the <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> dictionary.
+        </p>
+        <pre class="idl"><span class="idlDictionary" id="idl-def-ContactAddress">dictionary <span class="idlDictionaryID">ContactAddress</span> {
+<span class="idlMember">    <span class="idlMemberType"><a>boolean</a></span>    <span class="idlMemberName"><a href="#widl-ContactAddress-pref">pref</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactAddress-type">type</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactAddress-streetAddress">streetAddress</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactAddress-locality">locality</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactAddress-region">region</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactAddress-postalCode">postalCode</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactAddress-country">country</a></span>;</span>
+};</span></pre><div class="section" id="dictionary-contactaddress-members"><h4><span class="secno">5.4.1 </span>Dictionary <a href="#idl-def-ContactAddress" class="idlType"><code>ContactAddress</code></a> Members</h4><dl class="dictionary-members"><dt id="widl-ContactAddress-country"><code>country</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the country name corresponding to this <a class="idlType" href="#idl-def-ContactAddress"><code>ContactAddress</code></a>.
+          </dd><dt id="widl-ContactAddress-locality"><code>locality</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the locality (or city) name corresponding to this <a class="idlType" href="#idl-def-ContactAddress"><code>ContactAddress</code></a>.
+          </dd><dt id="widl-ContactAddress-postalCode"><code>postalCode</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the postal code (or zip) corresponding to this <a class="idlType" href="#idl-def-ContactAddress"><code>ContactAddress</code></a>.
+          </dd><dt id="widl-ContactAddress-pref"><code>pref</code> of type <span class="idlMemberType"><a>boolean</a></span></dt><dd>
+            This attribute indicates whether this instance of the <code>ContactAddress</code> is the preferred, 
+            or primary, value for the contact. By default, the value is <code>false</code>.
+          </dd><dt id="widl-ContactAddress-region"><code>region</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the region (or state/province) name corresponding to this <a class="idlType" href="#idl-def-ContactAddress"><code>ContactAddress</code></a>.
+          </dd><dt id="widl-ContactAddress-streetAddress"><code>streetAddress</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the street address corresponding to this <a class="idlType" href="#idl-def-ContactAddress"><code>ContactAddress</code></a>.
+          </dd><dt id="widl-ContactAddress-type"><code>type</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the type of address this object is representing (e.g. <code>work</code>, 
+            <code>home</code>, <code>premises</code>, etc).
+          </dd></dl></div>
+      </div>
+
+      <div class="section" id="the-contactorganization-dictionary">
+        <h3><span class="secno">5.5 </span>The <a class="idlType" href="#idl-def-ContactOrganization"><code>ContactOrganization</code></a> dictionary</h3>
+        <p>
+          The <a class="idlType" href="#idl-def-ContactOrganization"><code>ContactOrganization</code></a> dictionary is a reusable component that is used to support contact
+          organisations within the <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> dictionary.
+        </p>
+        <pre class="idl"><span class="idlDictionary" id="idl-def-ContactOrganization">dictionary <span class="idlDictionaryID">ContactOrganization</span> {
+<span class="idlMember">    <span class="idlMemberType"><a>boolean</a></span>    <span class="idlMemberName"><a href="#widl-ContactOrganization-pref">pref</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactOrganization-type">type</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactOrganization-name">name</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactOrganization-department">department</a></span>;</span>
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a>?</span> <span class="idlMemberName"><a href="#widl-ContactOrganization-title">title</a></span>;</span>
+};</span></pre><div class="section" id="dictionary-contactorganization-members"><h4><span class="secno">5.5.1 </span>Dictionary <a href="#idl-def-ContactOrganization" class="idlType"><code>ContactOrganization</code></a> Members</h4><dl class="dictionary-members"><dt id="widl-ContactOrganization-department"><code>department</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            The department within which this <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> works.
+          </dd><dt id="widl-ContactOrganization-name"><code>name</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            The name of the organisation.
+          </dd><dt id="widl-ContactOrganization-pref"><code>pref</code> of type <span class="idlMemberType"><a>boolean</a></span></dt><dd>
+            This attribute indicates whether this instance of the <code>ContactOrganization</code> is the preferred, or 
+            primary, value for the contact. By default, the value is <code>false</code>.
+          </dd><dt id="widl-ContactOrganization-title"><code>title</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            The job title that the <a class="idlType" href="#idl-def-Contact"><code>Contact</code></a> holds inside this organisation.
+          </dd><dt id="widl-ContactOrganization-type"><code>type</code> of type <span class="idlMemberType"><a>DOMString</a></span>, nullable</dt><dd>
+            This attribute contains the type of organisation this object is representing. 
+          </dd></dl></div>
+      </div>
+      <div class="section" id="the-contacterror-dictionary">
+        <h3><span class="secno">5.6 </span>The <a class="idlType" href="#idl-def-ContactError"><code>ContactError</code></a> dictionary</h3>
+        <p>
+          If the <a class="internalDFN" href="#dfn-contact-service">contact service</a> encounters an error then it <em title="must" class="rfc2119">must</em> return an error 
+          (through <code>postFailure()</code>) using the <a class="idlType" href="#idl-def-ContactError"><code>ContactError</code></a> dictionary.
+        </p>
+        <pre class="idl"><span class="idlDictionary" id="idl-def-ContactError">dictionary <span class="idlDictionaryID">ContactError</span> {
+<span class="idlMember">    <span class="idlMemberType"><a>DOMString</a></span> <span class="idlMemberName"><a href="#widl-ContactError-message">message</a></span>;</span>
+};</span></pre><div class="section" id="dictionary-contacterror-members"><h4><span class="secno">5.6.1 </span>Dictionary <a href="#idl-def-ContactError" class="idlType"><code>ContactError</code></a> Members</h4><dl class="dictionary-members"><dt id="widl-ContactError-message"><code>message</code> of type <span class="idlMemberType"><a>DOMString</a></span></dt><dd>A message describing the error.</dd></dl></div>
+      </div>
+      <div class="section" id="extended-contact-properties-and-parameters">
+        <h3><span class="secno">5.7 </span>Extended Contact Properties and Parameters</h3>
+        <p>
+          A <a class="internalDFN" href="#dfn-contact-service">contact service</a> <em title="may" class="rfc2119">may</em> extend the dictionaries described in in the Data Formats section with
+          additional fields. If providing an extended field, a <a class="internalDFN" href="#dfn-contact-service">contact service</a> <em title="must" class="rfc2119">must</em> prefix its name
+          with <code>X</code> (U+0058 LATIN CAPITAL LETTER X) or use a vendor-specific prefix.
+        </p>
+      </div>
+    </div>
+  
+
+<div class="appendix section" id="references"><!--OddPage--><h2><span class="secno">A. </span>References</h2><div class="section" id="normative-references"><h3><span class="secno">A.1 </span>Normative references</h3><dl class="bibliography"><dt id="bib-RFC2119">[RFC2119]</dt><dd>S. Bradner. <a href="http://www.ietf.org/rfc/rfc2119.txt"><cite>Key words for use in RFCs to Indicate Requirement Levels.</cite></a> March 1997. Internet RFC 2119.  URL: <a href="http://www.ietf.org/rfc/rfc2119.txt">http://www.ietf.org/rfc/rfc2119.txt</a> 
+</dd><dt id="bib-WEBIDL">[WEBIDL]</dt><dd>Cameron McCormack. <a href="http://www.w3.org/TR/2011/WD-WebIDL-20110927/"><cite>Web IDL.</cite></a> 27 September 2011. W3C Working Draft. (Work in progress.) URL: <a href="http://www.w3.org/TR/2011/WD-WebIDL-20110927/">http://www.w3.org/TR/2011/WD-WebIDL-20110927/</a> 
+</dd><dt id="bib-WEBINTENTS">[WEBINTENTS]</dt><dd>Greg Billock; James Hawkins; Paul Kinlan. <a href="http://dvcs.w3.org/hg/web-intents/raw-file/tip/spec/Overview.html"><cite>Web Intents.</cite></a> 06 June 2012. Editors' Draft. (Work in progress.) URL: <a href="http://dvcs.w3.org/hg/web-intents/raw-file/tip/spec/Overview.html">http://dvcs.w3.org/hg/web-intents/raw-file/tip/spec/Overview.html</a> 
+</dd></dl></div><div class="section" id="informative-references"><h3><span class="secno">A.2 </span>Informative references</h3><dl class="bibliography"><dt id="bib-OMA-CAB">[OMA-CAB]</dt><dd>Converged Address Book Enabler, Version 1.0, Open Mobile Alliance, URL: http://www.openmobilealliance.org/
+</dd><dt id="bib-POCO-SCHEMA">[POCO-SCHEMA]</dt><dd>Joseph Smarr. <a href="http://portablecontacts.net/draft-spec.html#schema"><cite>Portable Contacts 1.0 Draft C: Contact Schema</cite></a> 5 August 2008. URL: <a href="http://portablecontacts.net/draft-spec.html#schema">http://portablecontacts.net/draft-spec.html#schema</a> 
+</dd><dt id="bib-RFC2426">[RFC2426]</dt><dd>F. Dawson, T. Howes. <a href="http://www.ietf.org/rfc/rfc2426.txt"><cite>vCard MIME Directory Profile.</cite></a> September 1998. URL: <a href="http://www.ietf.org/rfc/rfc2426.txt">http://www.ietf.org/rfc/rfc2426.txt</a> 
+</dd></dl></div></div></body></html>
